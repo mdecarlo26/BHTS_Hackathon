@@ -7,6 +7,7 @@ Marc DeCarlo, Warren Wu, Jalal-Abdul Yahaya, Michael Rieger, Luke Cusato
 git clone https://github.com/mdecarlo26/BHTS_Hackathon.git  
 cd api  
 npm install  
+npm install express
 cd ../website/my-app
 npm install  
 ```  
