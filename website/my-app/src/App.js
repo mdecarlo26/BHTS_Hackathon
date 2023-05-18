@@ -3,7 +3,7 @@ import './App.css';
 function App() {
   return (
     <div>
-      <h1>START PROJECT</h1>
+      <h1>Capital One BHTS</h1>
     </div>
   );
 }
