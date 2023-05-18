@@ -22,6 +22,29 @@ function initDB(){
         ('12345678-90ab-cdef-1234-567890abcdef', '67890abc-def0-1234-5678-90abcdef0123', 'David', 'Johnson', '2023-05-18 15:45:00', '{"dollars": 300, "cents": 0}', '{"dollars": 1000, "cents": 0}', 246813579);
       `)})
       .then(() => {
+        return db.raw(`DROP TABLE IF EXISTS shopping_history; 
+          CREATE TABLE shopping_history (
+          uuid UUID PRIMARY KEY,
+          account_uuid UUID,
+          category TEXT,
+          date TIMESTAMP,
+          amount JSONB
+        );`)
+        
+      })
+      .then(()=>{
+        return db.raw(`INSERT INTO shopping_history (uuid, account_uuid, category, date, amount)
+        VALUES
+          ('01234567-89ab-cdef-0123-456789abcdef', '98765432-10fe-dcba-9876-543210fedcba', 'Electronics', '2023-05-17 10:30:00', '{"dollars": 100, "cents": 50}'),
+          ('abcdef12-3456-7890-abcd-ef1234567890', '98765432-10fe-dcba-9876-543210fedcba', 'Clothing', '2023-05-16 15:45:00', '{"dollars": 75, "cents": 20}'),
+          ('12345678-90ab-cdef-1234-567890abcdef', '98765432-10fe-dcba-9876-543210fedcba', 'Groceries', '2023-05-15 09:15:00', '{"dollars": 50, "cents": 0}'),
+          ('b74a1e03-50cd-4be5-9def-b4283382b4fc', '543210fe-dcba-fedc-ba98-765432109876', 'Electronics', '2023-05-18 10:00:00', '{"dollars": 50, "cents": 99}'),
+          ('db2342e9-a7ff-4f8b-92c9-0ff40d57a302', '543210fe-dcba-fedc-ba98-765432109876', 'Clothing', '2023-05-18 12:30:00', '{"dollars": 25, "cents": 50}'),
+          ('63e6665b-d09a-4b52-ae62-d0cb90355db1', '543210fe-dcba-fedc-ba98-765432109876', 'Home Decor', '2023-05-18 15:45:00', '{"dollars": 75, "cents": 0}');
+          
+        `)
+      })
+      .then(()=>{
         console.log('Initialization completed successfully.');
         db.destroy(); // Close the database connection
       })
