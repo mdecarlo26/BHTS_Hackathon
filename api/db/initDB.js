@@ -17,8 +17,8 @@ function initDB(){
       );`)
       .then(()=>{return db.raw(`INSERT INTO account_info (uuid, account_uuid, First_Name, Last_Name, date_modified, available_balance, desired_saving_amount, acct_num)
       VALUES
-        ('01234567-89ab-cdef-0123-456789abcdef', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-05-18 12:34:56', '{"dollars": 100, "cents": 50}', '{"dollars": 500, "cents": 0}', 123456789),
-        ('abcdef12-3456-7890-abcd-ef1234567890', '543210fe-dcba-fedc-ba98-765432109876', 'Jane', 'Smith', '2023-05-18 09:00:00', '{"dollars": 75, "cents": 20}', '{"dollars": 200, "cents": 50}', 987654321),
+        ('01234567-89ab-cdef-0123-456789abcdef', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-05-18 12:34:56', '{"dollars": 500, "cents": 0}','{"dollars": 100, "cents": 50}',  123456789),
+        ('abcdef12-3456-7890-abcd-ef1234567890', '543210fe-dcba-fedc-ba98-765432109876', 'Jane', 'Smith', '2023-05-18 09:00:00',  '{"dollars": 200, "cents": 50}','{"dollars": 75, "cents": 20}', 987654321),
         ('12345678-90ab-cdef-1234-567890abcdef', '67890abc-def0-1234-5678-90abcdef0123', 'David', 'Johnson', '2023-05-18 15:45:00', '{"dollars": 300, "cents": 0}', '{"dollars": 1000, "cents": 0}', 246813579);
       `)})
       .then(() => {

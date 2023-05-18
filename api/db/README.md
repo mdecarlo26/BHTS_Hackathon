@@ -42,7 +42,9 @@ The schema consists of several tables that represent different entities and thei
   - `uuid`: uuid  
   - `account_uuid`: uuid  
   - `start_date`: date
-  - `end_date`: date
+  - `end_date`: date 
+  - `end_date`: date  
+  - `fixed_payments_monthly` : jsonb -> {`dollars`:integer,`cents`:integer}  
   ...
 
 ## Relationships

@@ -14,6 +14,7 @@ npm install knex pg
 npm install uuid  
 cd ../website/my-app
 npm install  
+npm install react-router-dom  
 ```  
 
 # To initialize DB  
