@@ -44,12 +44,11 @@ function formatDataArray(dataArray) {
     return dataArray.map((data) => {
       const { available_balance, date } = data;
       // Format the balance
-      const balanceString = `${available_balance.dollars}.${available_balance.cents.toString().padStart(2, '0')}`;
   
       // Format the date
       const formattedDate = new Date(date).toLocaleDateString();
   
-      return { y: Number(balanceString), x: formattedDate };
+      return { y: Number(available_balance), x: formattedDate };
     });
   }
 
@@ -57,12 +56,11 @@ function formatDataArray(dataArray) {
     return dataArray.map((data) => {
       const { amount, date } = data;
       // Format the balance
-      const balanceString = `${amount.dollars}.${amount.cents.toString().padStart(2, '0')}`;
   
       // Format the date
       const formattedDate = new Date(date).toLocaleDateString();
   
-      return { y: Number(balanceString), x: formattedDate };
+      return { y: Number(amount), x: formattedDate };
     });
   }
 
@@ -112,14 +110,14 @@ export default function MainPage(){
     },[])
 
     useEffect(()=>{
-        if (balance_history[0] && semester && acctInfo.desired_saving_amount && shop_history[0]){
+        if (balance_history[0] && semester && acctInfo.uuid && shop_history[0]){
             const newarr = formatDataArray(balance_history);
             setCutoff(new Date(acctInfo.date_modified).toLocaleDateString())
-            const prediction_data = addBalancePrediction(newarr,new Date(semester.end_date).toLocaleDateString(),Number(`${acctInfo.desired_saving_amount.dollars}.${acctInfo.desired_saving_amount.cents.toString().padStart(2, '0')}`),new Date(acctInfo.date_modified).toLocaleDateString())
+            const prediction_data = addBalancePrediction(newarr,new Date(semester.end_date).toLocaleDateString(),Number(acctInfo.desired_saving_amount),new Date(acctInfo.date_modified).toLocaleDateString())
             setGraphBalance(newarr)
 
             const shopArr = formatShopArray(shop_history);
-            addSpendingPrediction(shopArr,new Date(semester.end_date).toLocaleDateString(),Number(`${acctInfo.desired_saving_amount.dollars}.${acctInfo.desired_saving_amount.cents.toString().padStart(2, '0')}`),new Date(acctInfo.date_modified).toLocaleDateString(),Number(`${balance_history[balance_history.length-1].available_balance.dollars}.${balance_history[balance_history.length-1].available_balance.cents.toString().padStart(2, '0')}`))
+            addSpendingPrediction(shopArr,new Date(semester.end_date).toLocaleDateString(),Number(acctInfo.desired_saving_amount),new Date(acctInfo.date_modified).toLocaleDateString(),Number(balance_history[balance_history.length-1].available_balance))
 
             setGraphSpending(shopArr)
 
@@ -142,18 +140,18 @@ export default function MainPage(){
 
     return (
 		<div>
-            {acctInfo.available_balance && semester.end_date &&(
+            {acctInfo.uuid && semester.end_date &&(
                 <CapOneHeader balance={acctInfo.available_balance} firstName={acctInfo.first_name} lastName={acctInfo.last_name} acctDigits={acctInfo.acct_num.slice(acctInfo.acct_num.length-4)}/>
             )};
           
-            {acctInfo.available_balance && semester.end_date &&(
+            {acctInfo.uuid && semester.end_date &&(
 			<div id="middle-row">
 				<div className="middle-box">
 					<div className="upper-middle-box">
                         <h3>Remaining Balance For Semester</h3>
                     </div>
 					<div className="lower-middle-box">
-                        ${acctInfo.available_balance.dollars}.{('0' + acctInfo.available_balance.cents.toString()).slice(-2)} &emsp; &emsp;  &emsp; until {semester.end_date.substr(5,2)}/{semester.end_date.substr(8,2)}/{semester.end_date.substr(0,4)}
+                        ${acctInfo.available_balance} &emsp; &emsp;  &emsp; until {semester.end_date.substr(5,2)}/{semester.end_date.substr(8,2)}/{semester.end_date.substr(0,4)}
                     </div>
                 </div>
 			
@@ -168,11 +166,11 @@ export default function MainPage(){
                 </div>
             </div>
             )};
-            {acctInfo.desired_saving_amount &&(
+            {acctInfo.uuid &&(
 			<div id="bottom-row">
               <div className = "bottom-middle-box">
                       Weekly Summary<br/>
-                      Desired Amount Remaining After Semester: ${acctInfo.desired_saving_amount.dollars}.{('0' + acctInfo.desired_saving_amount.cents.toString()).slice(-2)}
+                      Desired Amount Remaining After Semester: ${acctInfo.desired_saving_amount}
                 </div>
                 <div>
                     <h3>Red Lines and Points Indicate Future Values</h3>

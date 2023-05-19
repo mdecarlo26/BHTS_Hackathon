@@ -34,8 +34,7 @@ function getShoppingHistory(acct_id){
       AND ai.date BETWEEN si.start_date AND si.end_date
     ORDER BY
         ai.date ASC,
-      (ai.amount->>'dollars')::int DESC,
-      (ai.amount->>'cents')::int DESC;`;
+        ai.amount DESC;`;
     return db.raw(query)
 }
 
@@ -52,8 +51,7 @@ function getBalanceHistory(acct_id){
       AND ai.date_modified BETWEEN si.start_date AND si.end_date
     ORDER BY
         ai.date_modified ASC,
-      (ai.available_balance->>'dollars')::int DESC,
-      (ai.available_balance->>'cents')::int DESC;`;
+        ai.available_balance DESC;`;
     return db.raw(query)
 }
 

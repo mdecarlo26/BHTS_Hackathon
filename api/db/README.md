@@ -25,8 +25,8 @@ The schema consists of several tables that represent different entities and thei
   - `First_Name`: string  
   - `Last_Name`: string
   - `date_modified`: timestamp  
-  - `available_balance`: jsonb -> {`dollars`:integer,`cents`:integer}   
-  - `desired_saving_amount`: jsonb -> {`dollars`:integer,`cents`:integer}   
+  - `available_balance`: float  
+  - `desired_saving_amount`: float 
   - `acct_num`: string
   ...  
   
@@ -35,7 +35,7 @@ The schema consists of several tables that represent different entities and thei
   - `account_uuid`: uuid
   - `category`: string  
   - `date` : timestamp  
-  - `amount` : jsonb -> {`dollars`:integer,`cents`:integer}  
+  - `amount` : float  
   ...
 
 - **semester_info**: information about the semester  
@@ -44,7 +44,7 @@ The schema consists of several tables that represent different entities and thei
   - `start_date`: date
   - `end_date`: date 
   - `end_date`: date  
-  - `fixed_payments_monthly` : jsonb -> {`dollars`:integer,`cents`:integer}  
+  - `fixed_payments_monthly` : float
   ...
 
 ## Relationships
