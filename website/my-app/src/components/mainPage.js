@@ -151,7 +151,7 @@ export default function MainPage(){
                         <h3>Remaining Balance For Semester</h3>
                     </div>
 					<div className="lower-middle-box">
-                        ${acctInfo.available_balance} &emsp; &emsp;  &emsp; until {semester.end_date.substr(5,2)}/{semester.end_date.substr(8,2)}/{semester.end_date.substr(0,4)}
+                        ${acctInfo.available_balance.toFixed(2)} &emsp; &emsp;  &emsp; until {semester.end_date.substr(5,2)}/{semester.end_date.substr(8,2)}/{semester.end_date.substr(0,4)}
                     </div>
                 </div>
 			

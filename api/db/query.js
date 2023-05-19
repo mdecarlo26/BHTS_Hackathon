@@ -55,12 +55,20 @@ function getBalanceHistory(acct_id){
     return db.raw(query)
 }
 
+function addExpense(acct_id,category,date,amount){
+    const query = `INSERT INTO shopping_history (uuid, account_uuid, category, date, amount)
+    VALUES
+    (gen_random_uuid(), '${acct_id}', '${category}', '${date}', '${amount}');`
+    return db.raw(query);
+}
+
 module.exports={
     getAccountInfo,
     getShoppingHistory,
     getAllInfo_fromAcct,
     getSemesterInfo,
-    getBalanceHistory
+    getBalanceHistory,
+    addExpense
 }
 
 
