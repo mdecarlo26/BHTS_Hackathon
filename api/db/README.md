@@ -28,8 +28,8 @@ The schema consists of several tables that represent different entities and thei
   - `available_balance`: jsonb -> {`dollars`:integer,`cents`:integer}   
   - `desired_saving_amount`: jsonb -> {`dollars`:integer,`cents`:integer}   
   - `acct_num`: integer
-  ...
-
+  ...  
+  
 - **shopping_history**: history of purchases
   - `uuid`: uuid  
   - `account_uuid`: uuid
