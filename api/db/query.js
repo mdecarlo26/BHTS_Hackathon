@@ -3,18 +3,7 @@ const config = require('./db.config');
 const { v4: uuidv4 } = require('uuid');
 
 
-
-function getAllInfo_fromAcct(acct_id){
-    const query = `SELECT acc.uuid AS account_uuid, acc.first_name, acc.last_name, acc.date_modified AS account_date_modified,
-    json_build_object('shopping', json_agg(json_build_object('category', shop.category, 'date', shop.date, 'amount', shop.amount))) AS shopping,
-    sem.start_date, sem.end_date
-    FROM account_info AS acc
-    JOIN shopping_history AS shop ON acc.account_uuid = shop.account_uuid
-    JOIN semester_info AS sem ON acc.account_uuid = sem.account_uuid
-    WHERE acc.account_uuid = '${acct_id}'
-    GROUP BY acc.uuid, acc.first_name, acc.last_name, acc.date_modified, sem.start_date, sem.end_date;`;
-    return db.raw(query);
-}
+const db = knex(config);
 
 function getAllInfo_fromAcct(acct_id){
     const query = `SELECT acc.uuid AS account_uuid, acc.first_name, acc.last_name, acc.date_modified AS account_date_modified,
