@@ -18,7 +18,11 @@ function getAllInfo_fromAcct(acct_id){
 }
 
 function getAccountInfo(acct_id){
-    const query = `SELECT * FROM account_info WHERE account_uuid = '${acct_id}'`;
+    const query = `SELECT * 
+    FROM account_info
+    WHERE account_uuid = '${acct_id}'
+    ORDER BY date_modified DESC
+    LIMIT 1;`;
     return db.raw(query)
 }
 

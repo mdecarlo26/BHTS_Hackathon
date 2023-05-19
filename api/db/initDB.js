@@ -13,17 +13,17 @@ function initDB(){
         date_modified TIMESTAMP,
         available_balance JSONB,
         desired_saving_amount JSONB,
-        acct_num INTEGER
+        acct_num TEXT
       );`)
       .then(()=>{return db.raw(`INSERT INTO account_info (uuid, account_uuid, First_Name, Last_Name, date_modified, available_balance, desired_saving_amount, acct_num)
       VALUES
-        ('01234567-89ab-cdef-0123-456789abcdef', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-05-18 12:34:56', '{"dollars": 1000, "cents": 0}', '{"dollars": 0, "cents": 0}', 123456789),
-        ('b3b63219-0db6-4105-8860-152e5724c955', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-05-21 12:34:56', '{"dollars": 800, "cents": 40}', '{"dollars": 0, "cents": 0}', 123456789),
-        ('acfa39ce-7f4b-4a0a-89e3-46330d937fad', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-05-25 12:34:56', '{"dollars": 800, "cents": 0}', '{"dollars": 0, "cents": 0}', 123456789),
-        ('fbed5ab0-98b1-4ce6-b5a3-ea21f7e52d55', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-05-28 12:34:56', '{"dollars": 400, "cents": 0}', '{"dollars": 0, "cents": 0}', 123456789),
-        ('1ccbcced-0947-4504-b93d-4b916b574a5d', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-06-08 12:34:56', '{"dollars": 200, "cents": 0}', '{"dollars": 0, "cents": 0}', 123456789),
-        ('abcdef12-3456-7890-abcd-ef1234567890', '543210fe-dcba-fedc-ba98-765432109876', 'Jane', 'Smith', '2023-05-18 09:00:00', '{"dollars": 75, "cents": 20}', '{"dollars": 200, "cents": 50}', 987654321),
-        ('12345678-90ab-cdef-1234-567890abcdef', '67890abc-def0-1234-5678-90abcdef0123', 'David', 'Johnson', '2023-05-18 15:45:00', '{"dollars": 300, "cents": 0}', '{"dollars": 1000, "cents": 0}', 246813579);
+        ('01234567-89ab-cdef-0123-456789abcdef', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-05-18 12:34:56', '{"dollars": 1000, "cents": 0}', '{"dollars": 0, "cents": 0}', '123456789'),
+        ('b3b63219-0db6-4105-8860-152e5724c955', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-05-21 12:34:56', '{"dollars": 800, "cents": 40}', '{"dollars": 0, "cents": 0}', '123456789'),
+        ('acfa39ce-7f4b-4a0a-89e3-46330d937fad', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-05-25 12:34:56', '{"dollars": 800, "cents": 0}', '{"dollars": 0, "cents": 0}', '123456789'),
+        ('fbed5ab0-98b1-4ce6-b5a3-ea21f7e52d55', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-05-28 12:34:56', '{"dollars": 400, "cents": 0}', '{"dollars": 0, "cents": 0}', '123456789'),
+        ('1ccbcced-0947-4504-b93d-4b916b574a5d', '98765432-10fe-dcba-9876-543210fedcba', 'John', 'Doe', '2023-06-08 12:34:56', '{"dollars": 200, "cents": 0}', '{"dollars": 0, "cents": 0}', '123456789'),
+        ('abcdef12-3456-7890-abcd-ef1234567890', '543210fe-dcba-fedc-ba98-765432109876', 'Jane', 'Smith', '2023-05-18 09:00:00', '{"dollars": 75, "cents": 20}', '{"dollars": 200, "cents": 50}', '987654321'),
+        ('12345678-90ab-cdef-1234-567890abcdef', '67890abc-def0-1234-5678-90abcdef0123', 'David', 'Johnson', '2023-05-18 15:45:00', '{"dollars": 300, "cents": 0}', '{"dollars": 1000, "cents": 0}', '246813579');
       `)})
       .then(() => {
         return db.raw(`DROP TABLE IF EXISTS shopping_history; 

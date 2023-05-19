@@ -27,7 +27,7 @@ The schema consists of several tables that represent different entities and thei
   - `date_modified`: timestamp  
   - `available_balance`: jsonb -> {`dollars`:integer,`cents`:integer}   
   - `desired_saving_amount`: jsonb -> {`dollars`:integer,`cents`:integer}   
-  - `acct_num`: integer
+  - `acct_num`: string
   ...  
   
 - **shopping_history**: history of purchases
