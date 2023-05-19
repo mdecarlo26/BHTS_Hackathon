@@ -54,7 +54,7 @@ body {
     
   }
   .lower-middle-box{
-    font-family: "Inter";
+    font-family: "CapitalOne";
     color:white;
     font-size: 24px;
     padding-top: 10%;
@@ -105,3 +105,11 @@ body {
     /* background: lime; */
     margin-bottom:5%;
   }
+
+
+
+    @font-face {
+        font-family: CapitalOne;
+        src: website/my-app/fonts/Capital One Font.ttf;
+    }
+

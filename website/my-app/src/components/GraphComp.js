@@ -1,6 +1,6 @@
 import React, { useEffect, useRef,useState } from 'react';
 import './GraphComp.css'
-function GraphComponent({ data,in_width,in_height,padding }) {
+function GraphComponent({ data,in_width,in_height,padding,cutoff,y_label }) {
   const canvasRef = useRef(null);
   const [clickedValue, setClickedValue] = useState(null);
 
@@ -33,7 +33,7 @@ function GraphComponent({ data,in_width,in_height,padding }) {
     // Draw the horizontal gridlines and ticks
     const numHorizontalGridlines = 5;
     const yIncrement = graphHeight / numHorizontalGridlines;
-    for (let i = 1; i < numHorizontalGridlines; i++) {
+    for (let i = 0; i < numHorizontalGridlines+1; i++) {
       const y = padding + i * yIncrement;
       context.beginPath();
       context.moveTo(padding, y);
@@ -62,7 +62,7 @@ function GraphComponent({ data,in_width,in_height,padding }) {
     // Draw the vertical gridlines and ticks
     const numVerticalGridlines = data.length - 1;
     const xIncrement = graphWidth / numVerticalGridlines;
-    for (let i = 1; i < numVerticalGridlines; i++) {
+    for (let i = 0; i < numVerticalGridlines+1; i++) {
       const x = padding + i * xIncrement;
       context.beginPath();
       context.moveTo(x, padding);
@@ -81,11 +81,11 @@ function GraphComponent({ data,in_width,in_height,padding }) {
     }
 
     // Draw the x-axis labels
-    context.font = '15px sans-serif';
+    context.font = '12px sans-serif';
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.textBaseline = 'top';
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++,i++) {
       const x = padding + (new Date(data[i].x) - minDate) * xScale;
       const y = height - padding + 10;
       context.fillText(data[i].x, x, y);
@@ -98,33 +98,55 @@ function GraphComponent({ data,in_width,in_height,padding }) {
     context.textAlign = 'center';
     context.font = '25px sans-serif';
     context.fillStyle = 'black';
-    context.fillText('Balance ($)', 0, -10);
+    context.fillText(y_label, 0, -10);
     context.restore();
 
     //draw the X label
     context.font = '25px sans-serif';
     context.fillStyle = 'black';
     context.textAlign = 'center';
-    context.fillText('X-Axis Label', width / 2, height -40);
+    context.fillText('Date', width / 2, height -40);
 
     // Draw the graph line
+    context.setLineDash([])
     context.beginPath();
     context.moveTo(padding, height - padding - (data[0].y - minMoney) * yScale);
     for (let i = 1; i < data.length; i++) {
       const x = padding + (new Date(data[i].x) - minDate) * xScale;
       const y = height - padding - (data[i].y - minMoney) * yScale;
+      if (new Date(data[i].x) > cutoff){
+        context.strokeStyle = 'red';
+      }else {
+        context.strokeStyle = 'blue';
+      }
       context.lineTo(x, y);
+      context.lineWidth = 2;
+        context.stroke();
+        context.beginPath();
+        context.moveTo(x,height - padding - (data[data.length-1].y - minMoney) * yScale);
+        context.lineTo(x, y);
+        context.lineWidth = 2;
+        context.setLineDash([5,3])
+        context.stroke();
+        context.beginPath();
+        context.setLineDash([])
+        context.moveTo(x, y);
     }
-    context.strokeStyle = 'blue';
-    context.lineWidth = 2;
-    context.stroke();
+    
+    
 
     // Draw dots at data points
-    context.fillStyle = 'blue';
     for (let i = 0; i < data.length; i++) {
       const x = padding + (new Date(data[i].x) - minDate) * xScale;
       const y = height - padding - (data[i].y - minMoney) * yScale;
       context.beginPath();
+      if (new Date(data[i].x) > cutoff){
+        context.fillStyle = 'red';
+        console.log("red")
+      }else {
+        context.fillStyle = 'blue';
+        console.log("blue")
+      }
       context.arc(x, y, 5, 0, 2 * Math.PI);
       context.fill();
     }

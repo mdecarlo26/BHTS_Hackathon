@@ -4,32 +4,109 @@ import goFetch from './goFetch'
 import CapOneHeader from './CapOneHeader';
 import GraphComponent from './GraphComp';
 
+
+function getWeeklyDates(startDate, endDate) {
+    const dates = [];
+    const oneWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+    
+    // Convert start and end dates to milliseconds
+    const startMs = new Date(startDate).getTime();
+    const endMs = new Date(endDate).getTime();
+    
+    // Iterate from start date to end date with a weekly interval
+    for (let currentMs = startMs; currentMs <= endMs; currentMs += oneWeek) {
+      const currentDate = new Date(currentMs).toLocaleDateString();
+      dates.push(currentDate);
+    }
+    
+    return dates;
+  }
+
+function getWeeksBetweenDates(startDateStr, endDateStr) {
+    const startDateParts = startDateStr.split('/').map(Number);
+    const endDateParts = endDateStr.split('/').map(Number);
+  
+    // Construct Date objects using the parts of the date strings
+    const startDate = new Date(startDateParts[2], startDateParts[0] - 1, startDateParts[1]);
+    const endDate = new Date(endDateParts[2], endDateParts[0] - 1, endDateParts[1]);
+  
+    // Adjust the dates to midnight to avoid time zone inconsistencies
+  
+    const oneWeekInMilliseconds = 7 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
+    const timeDifference = Math.abs(endDate - startDate);
+    const numberOfWeeks = Math.ceil(timeDifference / oneWeekInMilliseconds);
+  
+    return numberOfWeeks;
+  }
+  
+
+function formatDataArray(dataArray) {
+    return dataArray.map((data) => {
+      const { available_balance, date } = data;
+      // Format the balance
+      const balanceString = `${available_balance.dollars}.${available_balance.cents.toString().padStart(2, '0')}`;
+  
+      // Format the date
+      const formattedDate = new Date(date).toLocaleDateString();
+  
+      return { y: Number(balanceString), x: formattedDate };
+    });
+  }
+
+function addBalancePrediction(dataArr,end_date,end_amount,curr_date){
+    const weeklyDates = getWeeklyDates(curr_date,end_date);
+    const timeDiff = getWeeksBetweenDates(curr_date,end_date)-1;
+    const curr_bal = dataArr[dataArr.length-1].y
+    const costDiff =  curr_bal- end_amount;
+    const weeklySpend = Number((costDiff/timeDiff).toFixed(2));
+    for (let i=1;i<weeklyDates.length;i++){
+        dataArr.push({x:weeklyDates[i],y: (curr_bal - (i)*weeklySpend).toFixed(2)})
+    }
+}
+
+
 export default function MainPage(){
     const acct_id = '98765432-10fe-dcba-9876-543210fedcba';
     const base_path = 'http://localhost:8080/'
 
     const [acctInfo,setAcctInfo] = useState({});
-    const [semester,setSemester] = useState({})
+    const [semester,setSemester] = useState({});
+    const [balance_history,setBalanceHistory] = useState([]);
+    const [graphBalance,setGraphBalance] = useState([]);
+    const [cutoff,setCutoff] = useState('');
     useEffect(()=>{
         const uri1 = base_path + `account/${acct_id}`;
-        const uri2 = base_path + `semester/${acct_id}`
+        const uri2 = base_path + `semester/${acct_id}`;
+        const uri3 = base_path + `balance/${acct_id}`
         goFetch(uri1,setAcctInfo)
         goFetch(uri2,setSemester)
+        goFetch(uri3,setBalanceHistory)
     },[])
 
-    // useEffect(()=>{
-    //     console.log("test",typeof(semester.end_date))
-    // },[semester])
+    useEffect(()=>{
+        if (balance_history[0] && semester && acctInfo.desired_saving_amount){
+            const newarr = formatDataArray(balance_history);
+            setCutoff(new Date(acctInfo.date_modified).toLocaleDateString())
+            const prediction_data = addBalancePrediction(newarr,new Date(semester.end_date).toLocaleDateString(),Number(`${acctInfo.desired_saving_amount.dollars}.${acctInfo.desired_saving_amount.cents.toString().padStart(2, '0')}`),new Date(acctInfo.date_modified).toLocaleDateString())
+            
+            setGraphBalance(newarr)
+        }
+    },[balance_history,semester,acctInfo])
+
+    useEffect(()=>{
+        // console.log("show me the balance",graphBalance)
+    },[graphBalance])
 
 
     const sampleData = [
         { x: '2023-01-01', y: 100 },
         { x: '2023-02-01', y: 150 },
         { x: '2023-03-01', y: 200 },
-        { x: '2023-04-01', y: 180.75 },
+        { x: '2023-04-01', y: 180.7 },
         { x: '2023-05-01', y: 220 },
         { x: '2023-06-01', y: 300 },
       ];
+
     return (
 		<div>
             {acctInfo.available_balance && semester.end_date &&(
@@ -38,37 +115,39 @@ export default function MainPage(){
           
             {acctInfo.available_balance && semester.end_date &&(
 			<div id="middle-row">
-				<div class="middle-box">
-					<div class="upper-middle-box">
+				<div className="middle-box">
+					<div className="upper-middle-box">
                         <h3>Remaining Balance For Semester</h3>
                     </div>
-					<div class="lower-middle-box">
+					<div className="lower-middle-box">
                         ${acctInfo.available_balance.dollars}.{('0' + acctInfo.available_balance.cents.toString()).slice(-2)} &emsp; &emsp;  &emsp; until {semester.end_date.substr(5,2)}/{semester.end_date.substr(8,2)}/{semester.end_date.substr(0,4)}
                     </div>
                 </div>
 			
             	
 				
-                <div class="middle-box">
-                        <div class="upper-middle-box">
+                <div className="middle-box">
+                        <div className="upper-middle-box">
                             <h3>Remaining Balance For The Week</h3>
                         </div>
-                        <div class="lower-middle-box">$ 75.00 &emsp; &emsp;  &emsp; &emsp; until 05/07/2023
+                        <div className="lower-middle-box">$ 75.00 &emsp; &emsp;  &emsp; &emsp; until 05/07/2023
                         </div>
                 </div>
             </div>
             )};
 
 			<div id="bottom-row">
-              <div class = "bottom-middle-box">
+              <div className = "bottom-middle-box">
                       Weekly Summary
                 </div>
-                <div class="graph">
-                    <GraphComponent data={sampleData} in_width={1250} in_height={600} padding={90}/>
-                </div>
+                {graphBalance[0] && cutoff &&(
+                    <div className="graph">
+                        <GraphComponent data={graphBalance} in_width={1250} in_height={600} padding={90} cutoff={new Date(cutoff)} y_label={'Balance ($)'}/>
+                    </div>
+                )};                
 
-                <div class="graph">
-                    <GraphComponent data={sampleData} in_width={1250} in_height={600} padding={90}/>
+                <div className="graph">
+                    <GraphComponent data={sampleData} in_width={1250} in_height={600} padding={90} y_label={'Spending ($)'}/>
                 </div>
 			</div>
 		</div>
