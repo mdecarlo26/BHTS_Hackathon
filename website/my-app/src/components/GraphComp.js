@@ -1,6 +1,6 @@
 import React, { useEffect, useRef,useState } from 'react';
 import './GraphComp.css'
-function GraphComponent({ data,in_width,in_height,padding,cutoff,y_label }) {
+function GraphComponent({ data,title,in_width,in_height,padding,cutoff,y_label }) {
   const canvasRef = useRef(null);
   const [clickedValue, setClickedValue] = useState(null);
 
@@ -106,7 +106,13 @@ function GraphComponent({ data,in_width,in_height,padding,cutoff,y_label }) {
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.fillText('Date', width / 2, height -40);
+    let minY = Number.MAX_VALUE; // Initialize minY with a high value
 
+    for (let i = 0; i < data.length; i++) {
+    if (data[i].y < minY) {
+        minY = data[i].y;
+    }
+    }
     // Draw the graph line
     context.setLineDash([])
     context.beginPath();
@@ -123,7 +129,7 @@ function GraphComponent({ data,in_width,in_height,padding,cutoff,y_label }) {
       context.lineWidth = 2;
         context.stroke();
         context.beginPath();
-        context.moveTo(x,height - padding - (data[data.length-1].y - minMoney) * yScale);
+        context.moveTo(x,height - padding - (minY - minMoney) * yScale);
         context.lineTo(x, y);
         context.lineWidth = 2;
         context.setLineDash([5,3])
@@ -142,14 +148,20 @@ function GraphComponent({ data,in_width,in_height,padding,cutoff,y_label }) {
       context.beginPath();
       if (new Date(data[i].x) > cutoff){
         context.fillStyle = 'red';
-        console.log("red")
       }else {
         context.fillStyle = 'blue';
-        console.log("blue")
       }
       context.arc(x, y, 5, 0, 2 * Math.PI);
       context.fill();
     }
+
+    const titleX = canvas.width / 2;
+    const titleY = 30;
+
+    context.font = 'bold 34px Arial';
+    context.fillStyle = 'black';
+    context.textAlign = 'center';
+    context.fillText(title, titleX, titleY);
     // Event listener for mouse click
     canvas.addEventListener('click', handleClick);
 

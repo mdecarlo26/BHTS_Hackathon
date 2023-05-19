@@ -39,9 +39,9 @@ function initDB(){
       .then(()=>{
         return db.raw(`INSERT INTO shopping_history (uuid, account_uuid, category, date, amount)
         VALUES
-          ('88b77a2b-755c-43d6-b81c-4f87b6a39017', '98765432-10fe-dcba-9876-543210fedcba', 'Electronics', '2023-06-17 10:30:00', '{"dollars": 100, "cents": 50}'),
-          ('134f8dc6-2761-495a-87b5-5a5c7bd36292', '98765432-10fe-dcba-9876-543210fedcba', 'Clothing', '2023-06-16 15:45:00', '{"dollars": 75, "cents": 20}'),
-          ('6f82327e-3daf-4929-92f2-57a05a1fa10f', '98765432-10fe-dcba-9876-543210fedcba', 'Groceries', '2023-06-15 09:15:00', '{"dollars": 50, "cents": 0}'),
+          ('88b77a2b-755c-43d6-b81c-4f87b6a39017', '98765432-10fe-dcba-9876-543210fedcba', 'Electronics', '2023-05-20 10:30:00', '{"dollars": 10, "cents": 50}'),
+          ('134f8dc6-2761-495a-87b5-5a5c7bd36292', '98765432-10fe-dcba-9876-543210fedcba', 'Clothing', '2023-06-4 15:45:00', '{"dollars": 30, "cents": 20}'),
+          ('6f82327e-3daf-4929-92f2-57a05a1fa10f', '98765432-10fe-dcba-9876-543210fedcba', 'Groceries', '2023-05-27 09:15:00', '{"dollars": 50, "cents": 0}'),
           ('b74a1e03-50cd-4be5-9def-b4283382b4fc', '543210fe-dcba-fedc-ba98-765432109876', 'Electronics', '2023-05-18 10:00:00', '{"dollars": 50, "cents": 99}'),
           ('db2342e9-a7ff-4f8b-92c9-0ff40d57a302', '543210fe-dcba-fedc-ba98-765432109876', 'Clothing', '2023-05-18 12:30:00', '{"dollars": 25, "cents": 50}'),
           ('63e6665b-d09a-4b52-ae62-d0cb90355db1', '543210fe-dcba-fedc-ba98-765432109876', 'Home Decor', '2023-05-18 15:45:00', '{"dollars": 75, "cents": 0}');

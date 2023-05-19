@@ -53,6 +53,19 @@ function formatDataArray(dataArray) {
     });
   }
 
+  function formatShopArray(dataArray) {
+    return dataArray.map((data) => {
+      const { amount, date } = data;
+      // Format the balance
+      const balanceString = `${amount.dollars}.${amount.cents.toString().padStart(2, '0')}`;
+  
+      // Format the date
+      const formattedDate = new Date(date).toLocaleDateString();
+  
+      return { y: Number(balanceString), x: formattedDate };
+    });
+  }
+
 function addBalancePrediction(dataArr,end_date,end_amount,curr_date){
     const weeklyDates = getWeeklyDates(curr_date,end_date);
     const timeDiff = getWeeksBetweenDates(curr_date,end_date)-1;
@@ -62,6 +75,17 @@ function addBalancePrediction(dataArr,end_date,end_amount,curr_date){
     for (let i=1;i<weeklyDates.length;i++){
         dataArr.push({x:weeklyDates[i],y: (curr_bal - (i)*weeklySpend).toFixed(2)})
     }
+}
+
+function addSpendingPrediction(dataArr,end_date,end_amount,curr_date,curr_bal){
+    const weeklyDates = getWeeklyDates(curr_date,end_date);
+    const timeDiff = getWeeksBetweenDates(curr_date,end_date)-1;
+    const costDiff =  curr_bal- end_amount;
+    const weeklySpend = Number((costDiff/timeDiff).toFixed(2));
+    for (let i=1;i<weeklyDates.length;i++){
+        dataArr.push({x:weeklyDates[i],y: weeklySpend})
+    }
+    // console.log(dataArr)
 }
 
 
@@ -74,24 +98,33 @@ export default function MainPage(){
     const [balance_history,setBalanceHistory] = useState([]);
     const [graphBalance,setGraphBalance] = useState([]);
     const [cutoff,setCutoff] = useState('');
+    const [shop_history,setShopHistory] = useState([]);
+    const [graphSpending,setGraphSpending] = useState([]);
     useEffect(()=>{
         const uri1 = base_path + `account/${acct_id}`;
         const uri2 = base_path + `semester/${acct_id}`;
-        const uri3 = base_path + `balance/${acct_id}`
+        const uri3 = base_path + `balance/${acct_id}`;
+        const uri4 = base_path + `history/${acct_id}`;
         goFetch(uri1,setAcctInfo)
         goFetch(uri2,setSemester)
         goFetch(uri3,setBalanceHistory)
+        goFetch(uri4,setShopHistory)
     },[])
 
     useEffect(()=>{
-        if (balance_history[0] && semester && acctInfo.desired_saving_amount){
+        if (balance_history[0] && semester && acctInfo.desired_saving_amount && shop_history[0]){
             const newarr = formatDataArray(balance_history);
             setCutoff(new Date(acctInfo.date_modified).toLocaleDateString())
             const prediction_data = addBalancePrediction(newarr,new Date(semester.end_date).toLocaleDateString(),Number(`${acctInfo.desired_saving_amount.dollars}.${acctInfo.desired_saving_amount.cents.toString().padStart(2, '0')}`),new Date(acctInfo.date_modified).toLocaleDateString())
-            
             setGraphBalance(newarr)
+
+            const shopArr = formatShopArray(shop_history);
+            addSpendingPrediction(shopArr,new Date(semester.end_date).toLocaleDateString(),Number(`${acctInfo.desired_saving_amount.dollars}.${acctInfo.desired_saving_amount.cents.toString().padStart(2, '0')}`),new Date(acctInfo.date_modified).toLocaleDateString(),Number(`${balance_history[balance_history.length-1].available_balance.dollars}.${balance_history[balance_history.length-1].available_balance.cents.toString().padStart(2, '0')}`))
+
+            setGraphSpending(shopArr)
+
         }
-    },[balance_history,semester,acctInfo])
+    },[balance_history,semester,acctInfo,shop_history])
 
     useEffect(()=>{
         // console.log("show me the balance",graphBalance)
@@ -135,21 +168,27 @@ export default function MainPage(){
                 </div>
             </div>
             )};
-
+            {acctInfo.desired_saving_amount &&(
 			<div id="bottom-row">
               <div className = "bottom-middle-box">
-                      Weekly Summary
+                      Weekly Summary<br/>
+                      Desired Amount Remaining After Semester: ${acctInfo.desired_saving_amount.dollars}.{('0' + acctInfo.desired_saving_amount.cents.toString()).slice(-2)}
+                </div>
+                <div>
+                    <h3>Red Lines and Points Indicate Future Values</h3>
                 </div>
                 {graphBalance[0] && cutoff &&(
                     <div className="graph">
-                        <GraphComponent data={graphBalance} in_width={1250} in_height={600} padding={90} cutoff={new Date(cutoff)} y_label={'Balance ($)'}/>
+                        <GraphComponent data={graphBalance} in_width={1250} in_height={600} padding={90} cutoff={new Date(cutoff)} y_label={'Balance ($)'} title={'Balance Throughout the Semester'}/>
                     </div>
                 )};                
-
+                {graphSpending[0] && cutoff &&(
                 <div className="graph">
-                    <GraphComponent data={sampleData} in_width={1250} in_height={600} padding={90} y_label={'Spending ($)'}/>
+                    <GraphComponent data={graphSpending} in_width={1250} in_height={600} padding={90} cutoff={new Date(cutoff)} y_label={'Spending ($)'} title={'Spending Throughout the Semester'}/>
                 </div>
+                )};
 			</div>
+            )}
 		</div>
 	);
 }
